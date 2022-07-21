@@ -12,6 +12,14 @@
             font-family: 'Akshar', sans-serif;
         }
 
+        .video {
+            display: block;
+            min-width: 480px;
+            min-height: 270px;
+            width: fit-content;
+            height: fit-content;
+        }
+
         @media (min-width: 768px) {
             .bd-placeholder-img-lg {
                 font-size: 3.5rem;
@@ -45,16 +53,16 @@
         <div class="p-3 shadow-lg">
             <img src="vainTitle.png" class="d-block mx-lg-auto img-fluid" alt="Vain Ascendance" loading="lazy">
             <div class="d-grid gap-2 d-md-flex justify-content-sm-center py-3">
-                <!-- <a href="https://store.steampowered.com/app/1632770/Star_Apprentice_Magical_Murder_Mystery/"
-                    role="button" class="btn btn-primary btn-lg px-4 me-md-2">View on Steam</a> -->
+                <a href="https://store.steampowered.com/app/2059600/Vain_Ascendance/" role="button"
+                    class="btn btn-primary btn-lg px-4 me-md-2">View on Steam</a>
                 <a href="https://will-o-works.itch.io/vain-ascendance" role="button"
                     class="btn btn-primary btn-lg px-4 me-md-2">View on Itch.io</a>
             </div>
-            <!-- <div class="embed-responsive embed-responsive-16by9">
-                <iframe width="480" height="270" class="embed-responsive-item"
-                    src="https://www.youtube.com/embed/l9Tqg8ycdt4" allowfullscreen>
+            <div class="d-flex justify-content-center embed-responsive embed-responsive-16by9 py-3">
+                <iframe class="video embed-responsive-item"
+                    src="https://www.youtube.com/embed/Zp1IaX2IMnM" allowfullscreen>
                 </iframe>
-            </div> -->
+            </div>
             <div id="carouselVain" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
 
@@ -83,7 +91,7 @@
             <p class="lead text-info my-3">A fast-paced roguelite platformer starring a vampire trying to steal a cure
                 to sunlight!</p>
             <p>A game made for INT D 450 in the Winter 2022 term over about 4 months. I created all the art, most of the
-                sound effects, and contributed a large portion of the programming to the project. The game achieved the
+                sound effects, and contributed most of the core programming to the project. The game achieved the
                 INT D 450 Game of the Year award.</p>
         </div>
         <div class="p-3 mb-5 shadow-lg">

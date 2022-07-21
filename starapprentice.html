@@ -12,6 +12,14 @@
             font-family: 'Akshar', sans-serif;
         }
 
+        .video {
+            display: block;
+            min-width: 480px;
+            min-height: 270px;
+            width: fit-content;
+            height: fit-content;
+        }
+
         @media (min-width: 768px) {
             .bd-placeholder-img-lg {
                 font-size: 3.5rem;
@@ -51,9 +59,9 @@
                 <a href="https://will-o-works.itch.io/star-apprentice" role="button"
                     class="btn btn-primary btn-lg px-4 me-md-2">View on Itch.io</a>
             </div>
-            <div class="embed-responsive embed-responsive-16by9">
+            <div class="d-flex justify-content-center embed-responsive embed-responsive-16by9 py-3">
                 <!-- width="560" height="315"  -->
-                <iframe width="480" height="270" class="embed-responsive-item"
+                <iframe class="video embed-responsive-item"
                     src="https://www.youtube.com/embed/l9Tqg8ycdt4" allowfullscreen>
                 </iframe>
             </div>
