@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Akshar&display=swap');
+
+body {
+    font-family: 'Akshar', sans-serif;
+}
+
+
+.backBtn {
+    position: fixed;
+    left: 8px;
+    top: 24px;
+}
+.backBtn:hover{
+    left: 12px;
+}
+
+a{
+    color: #5599ff;
+}
+
+a:hover{
+    color: #1762d3;
+}
+
+.video {
+    display: block;
+    min-width: 480px;
+    min-height: 270px;
+    width: fit-content;
+    height: fit-content;
+}
+
+@media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+    }
+}
