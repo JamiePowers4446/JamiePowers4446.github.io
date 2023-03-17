@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+
+    <title>Jamie Powers - Star Apprentice Tools</title>
+</head>
+
+<body onload="main()" class="text-center text-white bg-dark" style="background-color: #2b252b">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+
+    <header>
+        <div class="collapse bg-dark" id="navbarHeader">
+            <div class="container">
+
+            </div>
+        </div>
+        <div class="navbar navbar-dark bg-dark shadow-sm">
+            <div class="container">
+                <a href="index.html" role="button"
+                    class="navbar-brand btn btn-secondary d-flex align-items-center backBtn">&lt;
+                    Back</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="p-3 shadow-lg">
+            <h1>Editor Tools</h1>
+            <!-- <img src="starApprenticeTitle.png" class="d-block mx-lg-auto img-fluid"
+                alt="Star Apprentice: Magical Murder Mystery" loading="lazy">
+            <div class="d-grid gap-2 d-md-flex justify-content-sm-center py-3">
+                <a href="https://store.steampowered.com/app/1632770/Star_Apprentice_Magical_Murder_Mystery/"
+                    role="button" class="btn btn-primary btn-lg px-4 me-md-2">View on Steam</a>
+                <a href="https://will-o-works.itch.io/star-apprentice" role="button"
+                    class="btn btn-primary btn-lg px-4 me-md-2">View on Itch.io</a>
+            </div> -->
+
+        </div>
+        <div class="p-3 shadow-lg">
+            <h3 class="my-3">Overview</h3>
+            <!-- <p class="lead text-info my-3">Blast away deductions and solve the magical mystery in this danmaku-detective
+                game!</p> -->
+            <p>I made several editors in developing Star Apprentice: Magical Murder Mystery. This page describes the high level process of making them.</p>
+        </div>
+        <div class="p-3 shadow-lg">
+            <h3 class="my-3" id="dialogueeditor">Dialogue Editor</h3>
+            <!-- <p class="lead text-info my-3">Blast away deductions and solve the magical mystery in this danmaku-detective
+                game!</p> -->
+            <div class="col d-block mb-3">
+                <img src="dialogueeditor1.png" class="img-fluid" alt="Screenshot of the dialogue editor" width="460"
+                    height="215" loading="lazy">
+            </div>
+            <p>
+                Made to provide a visual interface for creating dialogue scenes effectively, with a focus on enabling
+                quick previews of the scene. The core components of the tool were planned and developed in four days,
+                with gradual expansion over time.
+            </p>
+            <p>
+                A similar tool available for Godot is Dialogic, which I looked at when designing my own system. The
+                reason I did not just use Dialogic itself comes down to a few reasons: 1) I needed to control the way
+                the scenes are displayed, and 2) I wanted more preview ability in the editor itself. These things would
+                have required large changes to their code, so I decided to create a specialized tool instead.
+            </p>
+        </div>
+        <div class="p-3 mb-5 shadow-lg">
+            <h3 class="my-3" id="dialoguestructure">System Structure</h3>
+            <div class="text-start">
+                <p>
+                    Each event has an editor interface that can be instantiated into the tool UI. Each event could be
+                    drastically different with various requirements, so a generic interface is not feasible and a
+                    specific design for each is needed. The editor is passed a reference to the event object it
+                    inspects, and is responsible for applying changes.
+                </p>
+                <img src="dialogueeditor2.png" class="img-fluid rounded mx-auto d-block mb-3 screenshot"
+                    alt="Screenshot of some dialogue editor events.">
+                <p class="text-center pt-0 mt-0">
+                    Some various events, in order:<br> Character Join, Play a Sound, 
+                    Dialogue Line, Portrait Expression, Setting a Save Flag, Starting a Confrontation (Bullet Hell).<br>
+                    The dropdown shows the string table selection, where blue text denotes groups of keys.
+                </p>
+            </div>
+        </div>
+        <div class="p-3 mb-5 shadow-lg">
+            <h3 class="my-3" id="expandable">Easy to Expand</h3>
+            <div class="text-start">
+                <p>
+                    Adding new events to the editor doesn’t take a lot of effort. The first step is to create the UI
+                    inspector for the event. A lot of the time, just duplicating and modifying an existing inspector
+                    gets you started even quicker. The interface script only needs to implement the <code>inspectEvent(event)</code>
+                    method, and an <code>updateFields()</code> method which applies the state to the UI. Individual controls may
+                    require their own implementation, but they all notify the main UI of changes via signal.
+                    Once the UI is made, only a single script needs to be updated with information about the new event
+                    and editor so that the event class and interface is associated with an id.
+                </p>
+            </div>
+        </div>
+        <div class="p-3 mb-5 shadow-lg">
+            <h3 class="my-3" id="dialoguelines">Adding Dialogue Lines</h3>
+            <div class="text-start">
+                <p>
+                    An issue with using string keys for the string table is that with manual entry it is prone to typos.
+                    To ease this I implemented a dropdown selector for every key in the string table, with a simple
+                    search in addition.
+                </p>
+                <p>
+                    Dialogue keys for referencing the strings table follow a particular format. For example we may have
+                    the key <code>D_INVESTIGATION3_VIC_DISCUSS_2</code>. The purpose of the format becomes more obvious
+                    if we replace
+                    the underscores with slashes like so: <code>D/INVESTIGATION3/VIC/DISCUSS/2</code>. It’s easy to see
+                    this as a folder hierarchy.
+                    Most importantly is the final value, a number. For this example folder we have 48 different keys, yikes!
+                    Imagine having to click to add every single one of these into the sequence and also add the rest of
+                    the scene data on top of it.
+                </p>
+                <img src="dialoguebatchevents.png" class="img-fluid rounded mx-auto d-block mb-3"
+                    alt="Screenshot of the batch add option.">
+                <p>
+                    The solution to this is the ability to batch add an entire folder of keys as speak events to the
+                    current sequence. We couldn’t autofill every single component however since predicting all the
+                    associated data is not possible without manual data entry. When selecting the batch add option 
+                    the user is prompted to select a group from the string table dropdown. All events in that group 
+                    will be added in their numbered order.
+                </p>
+            </div>
+        </div>
+        <div class="p-3 mb-5 shadow-lg">
+            <h3 class="my-3" id="dataentry">Convenience Features</h3>
+            <div class="text-start">
+                <p>
+                    Much of the data in dialogue sequences are ids for characters, resources, etc. Therefore it becomes
+                    tedious to expect the user to memorize all possible values. As a result many editor fields implement
+                    a dropdown selection with all the possible values. The way to obtain this list varies: many may need
+                    to reference a file of a particular type, portrait expressions need to read the animation data, save
+                    flags need to read the save file format, etc.
+                </p>
+                <img src="dialogueplaybtn.png" class="img-fluid rounded mx-auto d-block mb-3 screenshot"
+                    alt="Press this button in the editor to run the scene.">
+                <p class="text-center pt-0 mt-0">The play button that runs the currently opened dialogue sequence.</p>
+                <p>
+                    It also becomes important to get a rough preview of aspects of the scene without running it in game.
+                    Several preview features are implemented for various events. For example: dialogue lines are shown in a textbox the 
+                    same size as in game, portrait selection has a preview of the portrait on hovering on a pinnable icon, 
+                    sound/music events have a play button. If any of this is not enough, you are also able to play the scene
+                    (in isolation) through the editor to see exactly how it behaves.
+                </p>
+                <img src="mmm_screenshot23.png" class="img-fluid rounded mx-auto d-block mb-3 screenshot"
+                    alt="The openning scene, but in the editor preview">
+                    <p class="text-center pt-0 mt-0">The opening scene, but in the editor preview</p>
+            </div>
+        </div>
+        
+
+
+
+        <div class="p-3 shadow-lg">
+            <h3 class="my-3" id="hitboxeditor">Hitbox Editor</h3>
+            <!-- <p class="lead text-info my-3">Blast away deductions and solve the magical mystery in this danmaku-detective
+                game!</p> -->
+            <div class="col d-block mb-3">
+                <img src="hitboxeditor1.png" class="img-fluid" alt="Screenshot of the hitbox editor" width="460"
+                    height="215" loading="lazy">
+            </div>
+            <p>
+                The hitbox editor was designed to solve the issue of difficult to visualize hitboxes when editing large
+                amounts of hitbox data. For Star Apprentice, this means editing the hitbox data of each line of text in
+                the bullet hell.
+            </p>
+            <p>
+                You might consider that you could compute the position and bounds of a substring via the text system,
+                but this is not in fact available with Godot’s RichTextLabel. So we have only the option of manually
+                setting the hitbox data.
+            </p>
+            <p>
+                Most importantly is the visual editor. The hitbox is drawn overtop the text line. When you hover your
+                mouse over the hitbox you can click and drag to edit the position of the whole rectangle and each of the
+                corners and edges. The selection is highlighted clearly so the user knows exactly what they’re editing.
+            </p>
+        </div>
+        <div class="py-5">
+
+        </div>
+    </main>
+
+</body>
+
+</html>

@@ -23,7 +23,8 @@
         </div>
         <div class="navbar navbar-dark bg-dark shadow-sm">
             <div class="container">
-                <a href="index.html" role="button" class="navbar-brand btn btn-secondary d-flex align-items-center backBtn">&lt;
+                <a href="index.html" role="button"
+                    class="navbar-brand btn btn-secondary d-flex align-items-center backBtn">&lt;
                     Back</a>
             </div>
         </div>
@@ -39,13 +40,13 @@
                 <a href="https://will-o-works.itch.io/star-apprentice" role="button"
                     class="btn btn-primary btn-lg px-4 me-md-2">View on Itch.io</a>
             </div>
-            <div class="d-flex justify-content-center embed-responsive embed-responsive-16by9 py-3">
-                <!-- width="560" height="315"  -->
-                <iframe class="video embed-responsive-item" src="https://www.youtube.com/embed/l9Tqg8ycdt4"
+            <!-- <div class="d-flex justify-content-center embed-responsive embed-responsive-16by9 py-3">
+                <!- width="560" height="315"  ->
+                <iframe class="video-lg embed-responsive-item" src="https://www.youtube.com/embed/l9Tqg8ycdt4"
                     allowfullscreen>
                 </iframe>
-            </div>
-            <div id="carouselSAMMM" class="carousel slide shadow-md">
+            </div> -->
+            <div id="carouselSAMMM" class="carousel slide shadow-md mx-auto">
                 <div class="carousel-inner">
                     <div class="carousel-item active"><img src="SAMMM_4.png" class="d-block w-100"
                             alt="Star Apprentice: Magical Murder Mystery screenshot">
@@ -78,50 +79,237 @@
 
         </div>
         <div class="p-3 shadow-lg">
-            <h3 class="my-3">Overview</h3>
-            <p class="lead text-info my-3">Blast away deductions and solve the magical mystery in this danmaku-detective
-                game!</p>
-            <p>A game made for CMPUT 250 in the Fall 2020 term over about 4 months. I created all the art and planned
-                the overall design of the game. </p>
+            <h3 class="my-3" id="overview">Overview</h3>
+            <p class="lead text-info my-3">
+                Blast away deductions and solve the magical mystery in this danmaku-detective
+                game!
+            </p>
+            <p>
+                Originally made in a team of 6 over about 4 months, I later spent about 4 months recreating the game in
+                a new engine. I designed many systems for the game and making systems that would last long term informed 
+                my decisions on their design.
+            </p>
         </div>
         <div class="p-3 mb-5 shadow-lg">
-            <h3 class="my-3">Developing Assets Quickly</h3>
+            <h3 class="my-3" id="engine">Choosing the Right Engine</h3>
             <div class="text-start">
-                <p>I was the only artist on Star Apprentice, so in order to complete the necessary assets it was
-                    important to simplify and minimize the workload. My strategies for doing so revolve around
-                    prioritizing assets by importance.</p>
-                <div class="col mx-auto mb-3 d-block text-center">
-                    <img src="minnieWalkStrip.png" class="img-fluid" alt="Minnie's walk spritesheet">
-                    <img src="minnieWalk.gif" alt="Minnie walk animation">
-                </div>
-                <p>I applied Limited Animation techniques to the graphics of the game as a major way to get things done
-                    quickly. The strategy is to animate only what is necessary, and use as few frames as possible doing
-                    so. Minnie’s walk cycle is a great example of this as it uses only 6 frames. Though the game runs at
-                    60 FPS each of these frames is held for 8 frames (meaning the animation is played at 7.5 FPS). If we
-                    were to animate this at the full 60 FPS we would need 48 frames or for 30fps we would need 24
-                    frames, which is clearly not feasible.</p>
-                <div class="mx-auto mb-3">
-                    <img src="bhbackground.gif" class="rounded mx-auto d-block"
-                        alt="The background for Confrontation scenes.">
-                </div>
-                <p>Though smaller sprites were quick to make, there were a few large sprites which needed strategy to
-                    complete quickly. One such example is the background in the “Confrontation” segments. Though the
-                    game is made with pixel art, this is one component that was not made as pixel art. Instead it was
-                    made by placing some planes in a Unity scene and taking screenshots while controlling the scrolling
-                    of the planes.
-                    The color palette was then restricted afterward to help it fit with the other assets.</p>
-                <div class="col text-center mb-3">
-                    <div class=" mx-auto d-block">
-                        <img src="basicPortrait_HoldingFlatObj.png" class="rounded" alt="A 3d model for pose reference">
-                        <img src="irisPortrait.png" class="rounded" alt="Iris's portrait">
-                    </div>
-                </div>
-                <p>The character portraits were also an area where I decided to spend more time on because it was
-                    important to communicating each character in more detail. The small sprite is created first to
-                    establish the important aspects of the design. To start the portrait, I posed a 3d model which would
-                    be used as reference. I then drew the details on top of this reference.</p>
+                <p>
+                    The original version of the game was created using RPG Maker MV with the intention of pushing the
+                    engine to its limits, and the difficulties I observed with this version informed decisions about
+                    what engine to port the game to. Out of all the major engines right now, I needed something that
+                    excelled at 2d and had custom editor support. As a result Godot Engine was a clear choice. I believe
+                    in choosing the right tool for the job and this change will support development of other
+                    games long term.
+                </p>
+
             </div>
         </div>
+        <div class="p-3 mb-5 shadow-lg">
+            <h3 class="my-3" id="dialoguesystem">Dialogue System</h3>
+            <div class="text-start">
+                <p>
+                    I created a visual novel style dialogue system, which includes character portraits with multiple
+                    expressions and support for an expandable amount of other actions. The system is split into the data
+                    representation, the display components, and the <a href="mmmtools.html#dialogueeditor">editor</a>.
+                </p>
+                <h5>Data</h5>
+                <p>
+                    The dialogue is contained in the high level structure of a Dialogue Sequence, which contains a list
+                    of all events that occur in order. In other words, it says <i>what</i> should happen in the scene.
+                    Each
+                    event is an object within this list, and it may also contain subsequences. Standard events include
+                    directions for characters to speak, and also several events for sequence logic.
+                </p>
+                <pre><code>
+    tool
+    extends DialogEvent
+    class_name SpeakEvent
+    
+    
+    export (Resource) var character                     #The DialogCharacter resource of the speaker
+    export (int) var displayName = 0                    #ID of the shown character nickname
+    export (String, MULTILINE) var text:String = ""     #Line of text, used as key into string table
+    export (bool) var showTalking = true                #Whether the character should be shown speaking the line
+                </code></pre>
+                <p class="text-center pt-0 mt-0">The resource script defining a line of dialogue.</p>
+                <h5>Display</h5>
+                <p>
+                    The display system is set up to take a dialogue sequence as input and play it. It’s made of multiple
+                    individual components under the main logic component that each handle their own type of task. There
+                    are eight components in all including the Textbox, Portraits, and SignalCues
+                    components.
+                </p>
+                <img src="mmm_dialoguescenetree.png" class="img-fluid rounded mx-auto d-block mb-3"
+                    alt="The top level node structure of the dialogue scene.">
+                <p>
+                    The main logic component handles the sequencing. It starts each event in order, adding them to a set
+                    of active events until it receives the ‘handled’ callback from all subcomponents. This allows
+                    multiple events to process at once, say for example two characters appearing on screen
+                    simultaneously.
+                </p>
+                <p>
+                    The SignalCues component is of particular interest as this component can cover for any actions that
+                    existing events do not support, such as one-off occurrences. This takes advantage of the signal
+                    system in Godot, using a signal bus through the dialogue system interface. The signal broadcasts an
+                    event identifier and any node is allowed to do something in response. What makes this even more
+                    useful is that this can be received by the Godot AnimationPlayer node as the name of an animation to
+                    play. Since the animator can do many things including function calls, this alone makes the entire
+                    system able to do just about anything in the game pretty easily.
+                </p>
+            </div>
+        </div>
+        <div class="p-3 mb-5 shadow-lg">
+            <h3 class="my-3" id="dialoguehistory">Dialogue History</h3>
+            <div class="text-start">
+                <img src="mmm_screenshot22.png" class="img-fluid rounded mx-auto d-block mb-3 screenshot"
+                    alt="A screenshot of the history display in Star Apprentice">
+                <p>
+                    The player may forget or miss dialogue, so we have a history log the player may reference at any
+                    time. Though stored in a simple data structure we need to save it to a small binary format to
+                    minimize disk space usage. Originally I saved the file as a JSON string, which had the benefit of
+                    being easy, but was creating larger than ideal files with low amounts of data. My solution was to
+                    create a binary data format to store the history data.
+                </p>
+                <p>
+                    I based the format on bits of information I knew about image formats. The file format has a byte stream
+                    structure. The first byte is an id number for the type of event. 256 values is unlikely to ever be
+                    exceeded, but it could be expanded by using an extra byte if the value is set to certain special values.
+                    The next bits will depend on the type of event. A speak event for example has two bytes for the
+                    character id and nickname id, then the string id defining the line of text is saved as a null
+                    terminated string. The next event can then be encoded immediately after in the byte sequence.
+                </p>
+                <pre><code>
+    #Takes a dictionary containing the event data and encodes relevant data into a byte sequence.
+    func serializeSpeakEvent(data:Dictionary)->PoolByteArray:
+        #Format "EVENTID:CHARID:NAMEID:TEXT"
+        var pool = PoolByteArray()
+
+        pool.append(ID_SPEAK)          #Encode the ID for a SpeakEvent
+        pool.append(data["charnum"])   #Encode Character ID
+        pool.append(data["dname"])     #Encode character's Display Name(nickname)
+
+        var text:PoolByteArray = Helpers.encodeStrAsBytes(data["text"])
+        text.append(STRINGEND)
+        pool.append_array(text)        #Encode text data
+
+        return pool
+                </code></pre>
+                <p>
+                    A helpful observation that can be made here is that there is a lot of repetition in this data. Each
+                    scene will have the same set of characters with the same set of nicknames, and the dialogue line
+                    keys are formatted in ways like <code>D_CHAPTERX_SCENEY_1</code>, where everything except the number
+                    at the end
+                    stays constant. This makes it a good candidate for standard compression algorithms and is something
+                    I plan to explore further in the future. In my tests, the binary representation alone changed files
+                    that were ~60kb into &lt;1kb. With compression I had &lt;100bytes on the same file. The game did not
+                    ship with compression enabled however since there were issues with the decompression that gave
+                    incorrect results, which is part of what I plan to explore.
+                </p>
+            </div>
+        </div>
+        <div class="p-3 mb-5 shadow-lg">
+            <h3 class="my-3" id="bullethell">Bullet Hell System</h3>
+            <div class="text-start">
+                <p>
+                    The bullet hell system needs to be able to handle a large amount of objects. I use a dynamic object
+                    pooling system to ensure that spawning bullets is as efficient as possible. First each emitter will
+                    pre-populate with a user-defined number of bullets and cache them all. The bullets are stored in an
+                    array set up as a circular queue. When the emitter is to shoot a bullet, it pops one from the queue,
+                    and when a bullet is destroyed it is pushed back. If there are no available bullets when spawning
+                    then the array is expanded by another user-defined number of bullets. This all is to reduce the processing time
+                    spent moving bullets around in memory.
+                </p>
+                <img src="mmm_screenshot18.png" class="img-fluid rounded mx-auto d-block mb-3 screenshot"
+                    alt="A screenshot of a bullet hell pattern in Star Apprentice">
+                <p class="text-center pt-0 mt-0">One of the most dense patterns in the game. Note that the debug FPS counter reads 414.</p>
+                <p>
+                    The bullets themselves have more optimizations, and this is what saves the most processing time. The
+                    bullets do not use the base collision nodes; instead they use the PhysicsServer to check collision.
+                    I found that destroying bullets created the largest performance hit and so bullets simply turn off
+                    all processing when they are destroyed.
+                </p>
+                <p>
+                    Each piece of bullet hell content is designed to be modular while also easy to edit. The high level
+                    content is called a Wave, which contains a single pattern and needs to be able to contain many
+                    configurations of emitters, enemies, etc and any possible kind of behaviour for creating patterns.
+                    To do this each is defined in a scene file (.tscn) with its own script. The bullet hell system only
+                    needs to instantiate this scene and call its start method to use it. Since a saved scene can be
+                    referenced as a PackedScene, it is easy to reference from a Resource object.
+                </p>
+            </div>
+        </div>
+        <div class="p-3 mb-5 shadow-lg">
+            <h3 class="my-3" id="btree">Scene Structure - Behaviour Trees</h3>
+            <div class="text-start">
+                <img src="mmm_btreestructure.png" class="img-fluid rounded mx-auto d-block mb-3"
+                    alt="Screenshot of the node structure of a Btree">
+                <p class="text-center pt-0 mt-0">The node structure of a prop in the Dining Car. Has nested tree logic that depends on game progress.</p>
+                <p>
+                    Interactable objects, including NPCs, props, and doors, need to select dialogue based on your
+                    current progress in the game. In order to make it easy to have complex rules, each of these objects
+                    uses a behaviour tree to select which dialogue sequence to use. The leaves of this tree contain the
+                    dialogue sequence resources to play.
+                </p>
+                <pre><code>
+    extends Node
+    class_name BehaviourTreeNode
+
+    #Abstract parent class for any behaviour tree node
+
+    enum Results{
+        Success,Fail,Running,
+    }
+
+    func start():
+        pass
+
+    func reset():
+        pass
+
+    func ping()->int:
+        return Results.Fail         #Default to fail
+                    </code></pre>
+                <p>
+                    The most important tree nodes are the Selector and the Sequencer. The Selector will attempt to run
+                    each child node in order until one succeeds or all nodes are attempted. The Sequencer will run each
+                    node in order until one of them fails. In terms of dialogue, the Selector lets us pick one sequence
+                    out of a set to run and the Sequencer can be used to cycle through a set of dialogues in order.
+                    These work together with the SaveFlag node and other decorator nodes to be able to play the correct
+                    dialogue for the current point in the game.
+                </p>
+                <pre><code>
+    extends BTBaseDecorator
+    class_name BTSaveFlag
+    
+    #Pings child only of flag matches
+    
+    export var flagName := ""
+    export var expected := true
+    
+    func ping()->int:
+        var fl = CurrentSave.file.get(flagName)
+        
+        if fl == null:
+            print("Savefile didn't have property %s, called from %s"%[flagName, get_path()])
+            return Results.Fail
+        
+        if fl != expected:
+            return Results.Fail
+        
+        return child.ping()
+                    
+                </code></pre>
+            </div>
+        </div>
+        <!-- <div class="p-3 mb-5 shadow-lg">
+            <h3 class="my-3">topic</h3>
+            <div class="text-start">
+                <p>
+
+                </p>
+
+            </div>
+        </div> -->
     </main>
 
 </body>
