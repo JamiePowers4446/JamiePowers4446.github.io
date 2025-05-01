@@ -1,6 +1,8 @@
-theme: jekyll-theme-midnight
+remote_theme: pages-themes/midnight@v0.2.0
+
+title: "Jamie Powers - Game Developer"
 
 defaults:
    -
      values:
-       title: "the portfolio"
+       title: "Jamie Powers - Game Developer"
